@@ -1,18 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Player.Bass;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Player
 {
@@ -21,10 +9,26 @@ namespace Player
     /// </summary>
     public partial class MainWindow : Window
     {
+        private PluginManager _plugins;
+        private MediaPlayer _player;
+
         public MainWindow()
         {
             InitializeComponent();
             WindowInteropHelper helper = new WindowInteropHelper(this);
+            _player = new MediaPlayer(helper.Handle);
+            _plugins = new PluginManager();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Load the FLAC plugin
+            _plugins.Register("bassflac");
+
+            // Start playing something
+            _player.Load(@"D:\Soulseek\Aphrodite\(2002) Aftershock\09 Aphrodite - Ganja Man  [f. Deadly Hunta].flac");
+            _player.Volume = 1;
+            _player.Play();
         }
     }
 }

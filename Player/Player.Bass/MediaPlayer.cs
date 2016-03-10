@@ -30,7 +30,7 @@ namespace Player.Bass
         public MediaPlayer(IntPtr hWnd)
         {
             _hWnd = hWnd;
-            BassException.CheckBoolResult(NativeMethods.BASS_Init(-1, 0, BassDeviceFlags.Default, _hWnd, Guid.Empty));
+            BassException.CheckBoolResult(NativeMethods.BASS_Init(-1, 44100, BassDeviceFlags.Default, _hWnd));
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace Player.Bass
         {
             if(!_initialized)
             {
-                BassException.CheckBoolResult(NativeMethods.BASS_Init(-1, 0, BassDeviceFlags.Default, this._hWnd, Guid.Empty));
+                //BassException.CheckBoolResult(NativeMethods.BASS_Init(-1, 0, BassDeviceFlags.Default, _hWnd));
                 _initialized = true;
             }
         }

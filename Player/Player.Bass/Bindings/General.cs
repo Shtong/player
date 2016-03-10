@@ -45,7 +45,7 @@ namespace Player.Bass.Bindings
         /// <param name="clsid">Class identifier of the object to create, that will be used to initialize DirectSound... NULL = use default.</param>
         /// <returns>If the device was successfully initialized, <c>true</c> is returned, else <c>false</c> is returned.</returns>
         [DllImport(BASS_DLL_NAME)]
-        internal static extern bool BASS_Init(int device, int freq, BassDeviceFlags flags, IntPtr hWnd, Guid clsid);
+        internal static extern bool BASS_Init(int device, int freq, BassDeviceFlags flags, IntPtr hWnd, IntPtr clsid = default(IntPtr));
 
         /// <summary>
         /// Stops the output, pausing all musics/samples/streams on it.

@@ -29,7 +29,7 @@ namespace Player.Bass
         /// <param name="message">The message that describes the error.</param>
         /// <param name="code">A BASS error code.</param>
         public BassException(string message, ErrorCode code)
-            : base(message)
+            : base(GenerateMessage(message, code))
         {
             Code = code;
         }
@@ -76,6 +76,14 @@ namespace Player.Bass
         public static ErrorCode GetLastError()
         {
             return (ErrorCode)NativeMethods.BASS_ErrorGetCode();
+        }
+
+        private static string GenerateMessage(string userMessage, ErrorCode code)
+        {
+            if (!string.IsNullOrWhiteSpace(userMessage))
+                return userMessage;
+
+            return "An error occured inside the BASS library: " + code.ToString();
         }
 
         internal static float CheckFloatResult(float result)
