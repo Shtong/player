@@ -44,10 +44,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BassException.cs" />
+    <Compile Include="Bindings\Plugins.cs" />
     <Compile Include="Bindings\Streams.cs" />
     <Compile Include="ErrorCode.cs" />
     <Compile Include="Bindings\General.cs" />
     <Compile Include="MediaPlayer.cs" />
+    <Compile Include="NoMediaException.cs" />
+    <Compile Include="PluginManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

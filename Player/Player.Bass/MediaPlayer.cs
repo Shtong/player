@@ -7,17 +7,26 @@ using System.Threading.Tasks;
 
 namespace Player.Bass
 {
+    /// <summary>
+    /// Plays music.
+    /// </summary>
+    /// <seealso cref="System.IDisposable" />
     public sealed class MediaPlayer : IDisposable
     {
         private IntPtr _hWnd;
+        private IntPtr _currentStream;
         private bool _disposed;
+        private bool _initialized;
 
-        public MediaPlayer()
-            : this(IntPtr.Zero)
-        {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MediaPlayer"/> class.
+        /// </summary>
+        public MediaPlayer() : this(IntPtr.Zero) { }
 
-        }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MediaPlayer"/> class.
+        /// </summary>
+        /// <param name="hWnd">A window handle associated with the music source.</param>
         public MediaPlayer(IntPtr hWnd)
         {
             _hWnd = hWnd;
@@ -32,32 +41,63 @@ namespace Player.Bass
             Dispose(false);
         }
 
-        public bool HasMedia { get; private set; }
+        /// <summary>
+        /// Gets a value indicating whether this instance has a media file loaded.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance has a media loaded; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasMedia
+        {
+            get { return _currentStream != IntPtr.Zero; }
+        }
 
+        /// <summary>
+        /// Loads the specified media file.
+        /// </summary>
+        /// <param name="fileName">Name of the file to load.</param>
         public void Load(string fileName)
         {
             CheckNotDisposed();
+            InitializeBass();
+            
+            if(_currentStream != IntPtr.Zero)
+            {
+                // Unload previous stream
+                BassException.CheckBoolResult(NativeMethods.BASS_StreamFree(_currentStream));
+                _currentStream = IntPtr.Zero;
+            }
 
-
-
-            throw new NotImplementedException();
+            _currentStream = BassException.CheckHandleResult(NativeMethods.BASS_StreamCreateFile(false, fileName, 0, 0, BassFlags.Unicode));
         }
 
+        /// <summary>
+        /// Starts or resumes the currently loaded media.
+        /// </summary>
         public void Play()
         {
             CheckNotDisposed();
+            CheckMediaLoaded();
             BassException.CheckBoolResult(NativeMethods.BASS_Start());
         }
 
+        /// <summary>
+        /// Pauses the currently loaded media
+        /// </summary>
         public void Pause()
         {
             CheckNotDisposed();
+            CheckMediaLoaded();
             BassException.CheckBoolResult(NativeMethods.BASS_Pause());
         }
 
+        /// <summary>
+        /// Stops playing the currently loaded media
+        /// </summary>
         public void Stop()
         {
             CheckNotDisposed();
+            CheckMediaLoaded();
             BassException.CheckBoolResult(NativeMethods.BASS_Stop());
         }
 
@@ -72,10 +112,12 @@ namespace Player.Bass
         {
             get
             {
+                InitializeBass();
                 return BassException.CheckFloatResult(NativeMethods.BASS_GetVolume());
             }
             set
             {
+                InitializeBass();
                 if (value < 0.0 || value > 1.0)
                     throw new ArgumentOutOfRangeException(nameof(value), "Volume must be a value between 0 and 1");
                 BassException.CheckBoolResult(NativeMethods.BASS_SetVolume(value));
@@ -105,6 +147,21 @@ namespace Player.Bass
         {
             if (_disposed)
                 throw new ObjectDisposedException(GetType().Name);
+        }
+
+        private void CheckMediaLoaded()
+        {
+            if (!HasMedia)
+                throw new NoMediaException();
+        }
+
+        private void InitializeBass()
+        {
+            if(!_initialized)
+            {
+                BassException.CheckBoolResult(NativeMethods.BASS_Init(-1, 0, BassDeviceFlags.Default, this._hWnd, Guid.Empty));
+                _initialized = true;
+            }
         }
     }
 }
