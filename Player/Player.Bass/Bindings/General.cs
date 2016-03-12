@@ -47,12 +47,12 @@ namespace Player.Bass.Bindings
         [DllImport(BASS_DLL_NAME)]
         internal static extern bool BASS_Init(int device, int freq, BassDeviceFlags flags, IntPtr hWnd, IntPtr clsid = default(IntPtr));
 
-        /// <summary>
-        /// Stops the output, pausing all musics/samples/streams on it.
-        /// </summary>
-        /// <returns>If successful, then <c>true</c> is returned, else <c>false</c> is returned.</returns>
-        [DllImport(BASS_DLL_NAME)]
-        internal static extern bool BASS_Pause();
+        // <summary>
+        // Stops the output, pausing all musics/samples/streams on it.
+        // </summary>
+        // <returns>If successful, then <c>true</c> is returned, else <c>false</c> is returned.</returns>
+        //[DllImport(BASS_DLL_NAME)]
+        //internal static extern bool BASS_Pause();
 
         /// <summary>
         /// Sets the output master volume.
@@ -62,19 +62,19 @@ namespace Player.Bass.Bindings
         [DllImport(BASS_DLL_NAME)]
         internal static extern bool BASS_SetVolume(float volume);
 
-        /// <summary>
-        /// Starts (or resumes) the output.
-        /// </summary>
-        /// <returns>If successful, then <c>true</c> is returned, else <c>false</c> is returned.</returns>
-        [DllImport(BASS_DLL_NAME)]
-        internal static extern bool BASS_Start();
+        // <summary>
+        // Starts (or resumes) the output.
+        // </summary>
+        // <returns>If successful, then <c>true</c> is returned, else <c>false</c> is returned.</returns>
+        //[DllImport(BASS_DLL_NAME)]
+        //internal static extern bool BASS_Start();
 
-        /// <summary>
-        /// Stops the output, stopping all musics/samples/streams on it.
-        /// </summary>
-        /// <returns>If successful, then <c>true</c> is returned, else <c>false</c> is returned.</returns>
-        [DllImport(BASS_DLL_NAME)]
-        internal static extern bool BASS_Stop();
+        // <summary>
+        // Stops the output, stopping all musics/samples/streams on it.
+        // </summary>
+        // <returns>If successful, then <c>true</c> is returned, else <c>false</c> is returned.</returns>
+        //[DllImport(BASS_DLL_NAME)]
+        //internal static extern bool BASS_Stop();
     }
 
     [Flags]

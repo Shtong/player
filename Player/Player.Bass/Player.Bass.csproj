@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BassException.cs" />
+    <Compile Include="Bindings\Channels.cs" />
     <Compile Include="Bindings\Plugins.cs" />
     <Compile Include="Bindings\Streams.cs" />
     <Compile Include="ErrorCode.cs" />

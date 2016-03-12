@@ -26,9 +26,9 @@ namespace Player
             _plugins.Register("bassflac");
 
             // Start playing something
-            _player.Load(@"D:\Soulseek\Aphrodite\(2002) Aftershock\09 Aphrodite - Ganja Man  [f. Deadly Hunta].flac");
-            _player.Volume = 1;
+            _player.Load(@"D:\Soulseek\DJ Shadow\(2002) The Private Press\09 - Right Thing - GDMFSOB (Clean Instrumental Version).flac");
             _player.Play();
+            _player.Volume = 1;
         }
     }
 }

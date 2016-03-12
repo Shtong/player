@@ -8,6 +8,31 @@ using System.Threading.Tasks;
 namespace Player.Bass
 {
     /// <summary>
+    /// Determines the different possible playing states of a <see cref="MediaPlayer"/>.
+    /// </summary>
+    /// <seealso cref="MediaPlayer.State"/>
+    public enum MediaPlayerState
+    {
+        // Important note : The enumeration values must match those of BassActive for fast convertion
+        /// <summary>
+        /// The media player is stopped
+        /// </summary>
+        Stopped,
+        /// <summary>
+        /// The media player is playing
+        /// </summary>
+        Playing,
+        /// <summary>
+        /// The media player is waiting for more data, and will resume play as soon as possible.
+        /// </summary>
+        Waiting,
+        /// <summary>
+        /// The media player is paused
+        /// </summary>
+        Paused,
+    }
+
+    /// <summary>
     /// Plays music.
     /// </summary>
     /// <seealso cref="System.IDisposable" />
@@ -30,7 +55,6 @@ namespace Player.Bass
         public MediaPlayer(IntPtr hWnd)
         {
             _hWnd = hWnd;
-            BassException.CheckBoolResult(NativeMethods.BASS_Init(-1, 44100, BassDeviceFlags.Default, _hWnd));
         }
 
         /// <summary>
@@ -78,7 +102,7 @@ namespace Player.Bass
         {
             CheckNotDisposed();
             CheckMediaLoaded();
-            BassException.CheckBoolResult(NativeMethods.BASS_Start());
+            BassException.CheckBoolResult(NativeMethods.BASS_ChannelPlay(_currentStream, false));
         }
 
         /// <summary>
@@ -88,7 +112,7 @@ namespace Player.Bass
         {
             CheckNotDisposed();
             CheckMediaLoaded();
-            BassException.CheckBoolResult(NativeMethods.BASS_Pause());
+            BassException.CheckBoolResult(NativeMethods.BASS_ChannelPause(_currentStream));
         }
 
         /// <summary>
@@ -98,7 +122,7 @@ namespace Player.Bass
         {
             CheckNotDisposed();
             CheckMediaLoaded();
-            BassException.CheckBoolResult(NativeMethods.BASS_Stop());
+            BassException.CheckBoolResult(NativeMethods.BASS_ChannelStop(_currentStream));
         }
 
         /// <summary>
@@ -121,6 +145,21 @@ namespace Player.Bass
                 if (value < 0.0 || value > 1.0)
                     throw new ArgumentOutOfRangeException(nameof(value), "Volume must be a value between 0 and 1");
                 BassException.CheckBoolResult(NativeMethods.BASS_SetVolume(value));
+            }
+        }
+
+        /// <summary>
+        /// Gets the playing state of this instance.
+        /// </summary>
+        public MediaPlayerState State
+        {
+            get
+            {
+                if (_currentStream == IntPtr.Zero)
+                    return MediaPlayerState.Stopped;
+
+                return (MediaPlayerState)NativeMethods.BASS_ChannelIsActive(_currentStream);
+
             }
         }
 
@@ -159,7 +198,7 @@ namespace Player.Bass
         {
             if(!_initialized)
             {
-                //BassException.CheckBoolResult(NativeMethods.BASS_Init(-1, 0, BassDeviceFlags.Default, _hWnd));
+                BassException.CheckBoolResult(NativeMethods.BASS_Init(-1, 44100, BassDeviceFlags.Default, _hWnd));
                 _initialized = true;
             }
         }
