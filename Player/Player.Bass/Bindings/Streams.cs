@@ -10,7 +10,7 @@ namespace Player.Bass.Bindings
     internal static partial class NativeMethods
     {
         [DllImport(BASS_DLL_NAME, CharSet = CharSet.Unicode)]
-        internal static extern IntPtr BASS_StreamCreateFile(bool mem, string file, long offest, long length, BassFlags flags);
+        internal static extern SafeStreamHandle BASS_StreamCreateFile(bool mem, string file, long offest, long length, BassFlags flags);
 
         /// <summary>
         /// Frees a sample stream's resources, including any sync/DSP/FX it has.

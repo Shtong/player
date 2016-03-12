@@ -39,7 +39,7 @@ namespace Player.Bass
     public sealed class MediaPlayer : IDisposable
     {
         private IntPtr _hWnd;
-        private IntPtr _currentStream;
+        private SafeStreamHandle _currentStream;
         private bool _disposed;
         private bool _initialized;
 
@@ -73,7 +73,7 @@ namespace Player.Bass
         /// </value>
         public bool HasMedia
         {
-            get { return _currentStream != IntPtr.Zero; }
+            get { return _currentStream != null; }
         }
 
         /// <summary>
@@ -85,11 +85,11 @@ namespace Player.Bass
             CheckNotDisposed();
             InitializeBass();
             
-            if(_currentStream != IntPtr.Zero)
+            if(_currentStream != null)
             {
                 // Unload previous stream
-                BassException.CheckBoolResult(NativeMethods.BASS_StreamFree(_currentStream));
-                _currentStream = IntPtr.Zero;
+                _currentStream.Dispose();
+                _currentStream = null;
             }
 
             _currentStream = BassException.CheckHandleResult(NativeMethods.BASS_StreamCreateFile(false, fileName, 0, 0, BassFlags.Unicode));
@@ -155,7 +155,7 @@ namespace Player.Bass
         {
             get
             {
-                if (_currentStream == IntPtr.Zero)
+                if (_currentStream == null)
                     return MediaPlayerState.Stopped;
 
                 return (MediaPlayerState)NativeMethods.BASS_ChannelIsActive(_currentStream);

@@ -16,7 +16,7 @@ namespace Player.Bass.Bindings
         /// </param>
         /// <returns>If successful, <c>true</c> is returned, else <c>false</c> is returned.</returns>
         [DllImport(BASS_DLL_NAME)]
-        internal static extern bool BASS_ChannelPlay(IntPtr handle, bool restart);
+        internal static extern bool BASS_ChannelPlay(SafeStreamHandle handle, bool restart);
 
         /// <summary>
         /// Pauses a sample, stream, MOD music, or recording.
@@ -24,7 +24,7 @@ namespace Player.Bass.Bindings
         /// <param name="handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
         /// <returns>If successful, <c>true</c> is returned, else <c>false</c> is returned.</returns>
         [DllImport(BASS_DLL_NAME)]
-        internal static extern bool BASS_ChannelPause(IntPtr handle);
+        internal static extern bool BASS_ChannelPause(SafeStreamHandle handle);
 
         /// <summary>
         /// Stops a sample, stream, MOD music, or recording.
@@ -32,10 +32,15 @@ namespace Player.Bass.Bindings
         /// <param name="handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
         /// <returns>If successful, <c>true</c> is returned, else <c>false</c> is returned.</returns>
         [DllImport(BASS_DLL_NAME)]
-        internal static extern bool BASS_ChannelStop(IntPtr handle);
+        internal static extern bool BASS_ChannelStop(SafeStreamHandle handle);
 
+        /// <summary>
+        /// Checks if a sample, stream, or MOD music is active (playing) or stalled. Can also check if a recording is in progress.
+        /// </summary>
+        /// <param name="handle">The channel handle... a HCHANNEL, HMUSIC, HSTREAM, or HRECORD.</param>
+        /// <returns></returns>
         [DllImport(BASS_DLL_NAME)]
-        internal static extern BassActive BASS_ChannelIsActive(IntPtr handle);
+        internal static extern BassActive BASS_ChannelIsActive(SafeStreamHandle handle);
     }
 
     internal enum BassActive

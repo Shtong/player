@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,7 +15,7 @@ namespace Player.Bass
     /// </summary>
     public class PluginManager : IDisposable
     {
-        private Dictionary<string, IntPtr> _registeredPlugins = new Dictionary<string, IntPtr>();
+        private Dictionary<string, SafePluginHandle> _registeredPlugins = new Dictionary<string, SafePluginHandle>();
 
         /// <summary>
         /// Creates a new instance of <see cref="PluginManager"/>
@@ -38,7 +39,7 @@ namespace Player.Bass
             string fullPath = Path.Combine(BaseDirectory, pluginName + ".dll");
             if (!File.Exists(fullPath))
                 throw new FileNotFoundException("Could not find the plugin file.", fullPath);
-            IntPtr pluginHandle = BassException.CheckHandleResult(NativeMethods.BASS_PluginLoad(fullPath, BassFlags.Unicode));
+            SafePluginHandle pluginHandle = BassException.CheckHandleResult(NativeMethods.BASS_PluginLoad(fullPath, BassFlags.Unicode));
             _registeredPlugins.Add(fullPath, pluginHandle);
         }
 
@@ -60,13 +61,8 @@ namespace Player.Bass
             {
                 if (disposing)
                 {
-                    foreach(var pair in _registeredPlugins)
-                    {
-                        if (!NativeMethods.BASS_PluginFree(pair.Value))
-                            // No need for an exception if unloading fails, although we'll notify the developper
-                            Debug.Fail($"Could not free plugin \"{pair.Key}\" with handle {pair.Value}");
-
-                    }
+                    foreach (var pair in _registeredPlugins)
+                        pair.Value.Dispose();
                 }
                 
                 _registeredPlugins = null;

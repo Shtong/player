@@ -1,5 +1,6 @@
 ﻿using Player.Bass.Bindings;
 using System;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 
 namespace Player.Bass
@@ -99,9 +100,10 @@ namespace Player.Bass
                 throw new BassException();
         }
 
-        internal static IntPtr CheckHandleResult(IntPtr result)
+        internal static T CheckHandleResult<T>(T result)
+            where T : SafeHandle
         {
-            if (result == IntPtr.Zero)
+            if (result == null || result.IsInvalid)
                 throw new BassException();
             return result;
         }

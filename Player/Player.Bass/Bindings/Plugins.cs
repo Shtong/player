@@ -10,7 +10,7 @@ namespace Player.Bass.Bindings
     internal partial class NativeMethods
     {
         [DllImport(BASS_DLL_NAME, CharSet = CharSet.Unicode)]
-        internal static extern IntPtr BASS_PluginLoad(string file, BassFlags flags);
+        internal static extern SafePluginHandle BASS_PluginLoad(string file, BassFlags flags);
 
         [DllImport(BASS_DLL_NAME)]
         internal static extern bool BASS_PluginFree(IntPtr handle);

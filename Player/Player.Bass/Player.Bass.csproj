@@ -46,6 +46,8 @@
     <Compile Include="BassException.cs" />
     <Compile Include="Bindings\Channels.cs" />
     <Compile Include="Bindings\Plugins.cs" />
+    <Compile Include="Bindings\SafePluginHandle.cs" />
+    <Compile Include="Bindings\SafeStreamHandle.cs" />
     <Compile Include="Bindings\Streams.cs" />
     <Compile Include="ErrorCode.cs" />
     <Compile Include="Bindings\General.cs" />
